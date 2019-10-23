@@ -1,6 +1,6 @@
 # Know_Me_Api
 
-<i><h3>Developed with ASP.NET Web API Core.</h3></i>
+<i><h3>Demo App - ASP.NET Web API Core.</h3></i>
 
 - An Application connecting SQL Server database with code first approach using EntityFramework core
 </br>
