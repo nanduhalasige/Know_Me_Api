@@ -73,7 +73,7 @@ namespace Know_Me_Api.Utility
 
         private static string GetFilePath()
         {
-            var filePath = @"C:\logs\";
+            var filePath = @"D:\logs\";
             var fileName = DateTime.Now.Date.ToString() + ".txt";
             return filePath + fileName;
         }
