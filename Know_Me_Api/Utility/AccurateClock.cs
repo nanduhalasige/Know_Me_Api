@@ -40,7 +40,7 @@ namespace Know_Me_Api.Utility
                 var accurateTime = DateTime.UtcNow.Subtract(_timeOffset);
                 return accurateTime;
             }
-            catch (Exception ex)
+            catch
             {
                 return DateTime.UtcNow;
             }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Know_Me_Api.Models;
 
 namespace Know_Me_Api.Models
 {
@@ -12,13 +13,16 @@ namespace Know_Me_Api.Models
 
         public DbSet<UserInfo> UserInfo { get; set; }
         public DbSet<Role> Role { get; set; }
+        public DbSet<Products> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserInfo>().ToTable("UserInfo");
             modelBuilder.Entity<Role>().ToTable("Role");
+            modelBuilder.Entity<Products>().ToTable("Products");
         }
+
 
     }
 }

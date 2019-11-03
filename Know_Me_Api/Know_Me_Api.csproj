@@ -10,6 +10,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Repositories\**" />
+    <Content Remove="Data\Repositories\**" />
+    <EmbeddedResource Remove="Data\Repositories\**" />
+    <None Remove="Data\Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20191102191058_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191102191058_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191102192743_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191102192743_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191102200440_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191102200440_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191102202002_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191102202002_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191102202053_testing.cs" />
+    <Compile Remove="Migrations\20191102202053_testing.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -18,6 +38,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+    <PackageReference Include="Unity" Version="5.11.1" />
   </ItemGroup>
 
 </Project>

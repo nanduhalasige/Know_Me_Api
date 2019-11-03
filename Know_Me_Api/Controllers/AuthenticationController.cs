@@ -31,6 +31,7 @@ namespace Know_Me_Api.Controllers
         }
 
         // POST: api/Authentication
+        [AllowAnonymous]
         [Route("PostUserInfo")]
         [HttpPost]
         public async Task<IActionResult> PostUserInfo([FromBody] UserInfo userInfo)
@@ -156,7 +157,8 @@ namespace Know_Me_Api.Controllers
                 //new Claim(JwtRegisteredClaimNames.Sub, user.userName),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.firstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.lastName),
-                new Claim(JwtRegisteredClaimNames.Email, user.email)
+                new Claim(JwtRegisteredClaimNames.Email, user.email),
+                //new Claim()
             };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                _config["Jwt:Issuer"],

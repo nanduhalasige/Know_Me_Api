@@ -1,4 +1,5 @@
 ﻿using Know_Me_Api.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -8,6 +9,7 @@ namespace Know_Me_Api
     {
         public static void Initialize(DBContext context)
         {
+            context.Database.Migrate();
             context.Database.EnsureCreated();
 
             if (context.UserInfo.Any() || context.Role.Any())

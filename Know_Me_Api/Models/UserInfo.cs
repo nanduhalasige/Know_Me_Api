@@ -10,13 +10,13 @@ namespace Know_Me_Api.Models
     {
         [Key]
         public Guid userId { get; set; }
-        [Required(ErrorMessage ="First Name is required"),MaxLength(20)]
+        [Required,MaxLength(20)]
         public string firstName { get; set; }
-        [Required(ErrorMessage = "Last Name is required"), MaxLength(20)]
+        [Required, MaxLength(20)]
         public string lastName { get; set; }
-        [Required(ErrorMessage = "Email Name is required")]
+        [Required]
         public string email { get; set; }
-        [Required(ErrorMessage = "Username is required"), MaxLength(20)]
+        [Required, MaxLength(20)]
         public string userName { get; set; }
         public string password { get; set; }
         public bool? IsExternal { get; set; }
