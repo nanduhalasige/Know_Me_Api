@@ -40,6 +40,8 @@ namespace Know_Me_Api.Controllers
             {
                 return BadRequest(ModelState);
             }
+            userInfo.roleId = 3;
+            userInfo.isActive = true;
             _context.UserInfo.Add(userInfo);
             await _context.SaveChangesAsync();
 
@@ -158,13 +160,16 @@ namespace Know_Me_Api.Controllers
                 new Claim(JwtRegisteredClaimNames.GivenName, user.firstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.lastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.email),
-                //new Claim()
+                new Claim("Role", user.roleId.ToString())
             };
+           
+
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                _config["Jwt:Issuer"],
-               expires: DateTime.Now.AddMinutes(30),
+               expires: DateTime.Now.AddMonths(1),
                signingCredentials: creds,
-               claims: claims);
+               claims: claims
+               );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

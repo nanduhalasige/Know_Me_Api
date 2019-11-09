@@ -9,7 +9,7 @@ namespace Know_Me_Api
     {
         public static void Initialize(DBContext context)
         {
-            context.Database.Migrate();
+            //context.Database.Migrate();
             context.Database.EnsureCreated();
 
             if (context.UserInfo.Any() || context.Role.Any())
@@ -41,10 +41,10 @@ namespace Know_Me_Api
                    role="Administrator"
                 },
                 new Role{
-                    role="Editor"
+                    role="Manager"
                 },
                 new Role{
-                    role="Public"
+                    role="Employee"
                 }
             };
             foreach (Role u in role)

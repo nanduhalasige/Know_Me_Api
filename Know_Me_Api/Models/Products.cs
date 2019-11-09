@@ -11,9 +11,10 @@ namespace Know_Me_Api.Models
         [Key]
         public Guid productId { get; set; }
         [Required]
-        public string prodName { get; set; }
+        public string manufacturerName { get; set; }
+        [Required]
+        public string modelName { get; set; }
         public int quantity { get; set; }
-        public string description { get; set; }
-        public string imageUrl { get; set; }
+        public int price { get; set; }
     }
 }

@@ -49,19 +49,22 @@ namespace Know_Me_Api.Controllers
         }
 
         // PUT: api/Products/5
+        //[Route("UpdateProduct/{}")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProducts([FromRoute] Guid id, [FromBody] Products products)
         {
+            //var idConverted = Guid.Parse(Request.QueryString.Value.Split('=')[1]);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            products.productId = id;
 
-            if (id != products.productId)
-            {
-                return BadRequest();
-            }
-
+            //var prods = await _context.Products.FindAsync(id);
+            //prods.quantity = products.quantity;
+            //prods.manufacturerName = products.manufacturerName;
+            //prods.modelName = products.modelName;
+            //prods.price = products.price;
             _context.Entry(products).State = EntityState.Modified;
 
             try
@@ -79,13 +82,12 @@ namespace Know_Me_Api.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
+            return CreatedAtAction("GetProducts", GetProducts());
         }
 
         // POST: api/Products
-        [Route("AddNewProduct")]
         [HttpPost]
+        [Route("AddNewProduct")]
         public async Task<IActionResult> AddNewProduct([FromBody] Products products)
         {
             if (!ModelState.IsValid)
@@ -96,7 +98,7 @@ namespace Know_Me_Api.Controllers
             _context.Products.Add(products);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProducts", new { id = products.productId }, products);
+            return CreatedAtAction("GetProducts", GetProducts());
         }
 
         // DELETE: api/Products/5
@@ -117,7 +119,7 @@ namespace Know_Me_Api.Controllers
             _context.Products.Remove(products);
             await _context.SaveChangesAsync();
 
-            return Ok(products);
+            return CreatedAtAction("GetProducts", GetProducts());
         }
 
         private bool ProductsExists(Guid id)

@@ -8,6 +8,7 @@ using Know_Me_Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace Know_Me_Api
 {
@@ -30,6 +31,7 @@ namespace Know_Me_Api
                 options.ForwardClientCertificate = false;
             });
             services.AddCors();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                     {

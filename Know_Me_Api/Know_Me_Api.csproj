@@ -27,9 +27,16 @@
     <Compile Remove="Migrations\20191102202002_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20191102202053_testing.cs" />
     <Compile Remove="Migrations\20191102202053_testing.Designer.cs" />
+    <Compile Remove="Migrations\20191102202258_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191102202258_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191102202402_AddProducts.cs" />
+    <Compile Remove="Migrations\20191102202402_AddProducts.Designer.cs" />
+    <Compile Remove="Migrations\20191108190447_ProductChanges.cs" />
+    <Compile Remove="Migrations\20191108190447_ProductChanges.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
