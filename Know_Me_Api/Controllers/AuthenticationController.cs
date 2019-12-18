@@ -42,6 +42,7 @@ namespace Know_Me_Api.Controllers
             }
             userInfo.roleId = 3;
             userInfo.isActive = true;
+            userInfo.userName = userInfo.userName.ToLower();
             _context.UserInfo.Add(userInfo);
             await _context.SaveChangesAsync();
 
@@ -88,8 +89,12 @@ namespace Know_Me_Api.Controllers
                         Clock = new AccurateClock(),
                         IssuedAtClockTolerance = TimeSpan.FromSeconds(20)
                     }).Result;
-                var user = await Authenticate(payload);
 
+                if (payload.Audience.ToString() != _config["GoogleAud:secrete"].ToString())
+                {
+                    return NotFound(new { message = "Somethong wen wrong" });
+                }
+                var user = await Authenticate(payload);
                 var tokenString = BuildToken(user);
 
                 return Ok(new { token = tokenString });
@@ -132,7 +137,7 @@ namespace Know_Me_Api.Controllers
 
         private AuthUser Authenticate(LoginModel login)
         {
-            var user = _context.UserInfo.FirstOrDefault(x => x.userName.Equals(login.userName) && x.password.Equals(login.password));
+            var user = _context.UserInfo.FirstOrDefault(x => x.userName.Equals(login.userName.ToLower()) && x.password.Equals(login.password));
 
             if (user == null)
             {
@@ -147,6 +152,15 @@ namespace Know_Me_Api.Controllers
             return dateTime.AddSeconds(ticks);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("IsApiOnline")]
+        public bool IsApiOnline()
+        {
+            return true;
+        }
+
+
         #region Generate Token
 
         private string BuildToken(UserInfo user)
@@ -160,9 +174,10 @@ namespace Know_Me_Api.Controllers
                 new Claim(JwtRegisteredClaimNames.GivenName, user.firstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.lastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.email),
-                new Claim("Role", user.roleId.ToString())
+                new Claim("Role", user.roleId.ToString()),
+                new Claim("UserId", user.userId.ToString())
             };
-           
+
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                _config["Jwt:Issuer"],

@@ -16,5 +16,9 @@ namespace Know_Me_Api.Models
         public string modelName { get; set; }
         public int quantity { get; set; }
         public int price { get; set; }
+        public string userId { get; set; }
+        public string modifiedBy { get; set; }
+        public DateTime? modifiedOn { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

@@ -103,9 +103,46 @@ namespace Know_Me_Api.Controllers
             return Ok(userInfo);
         }
 
+        [HttpPost]
+        [Route("UpdateUserRole")]
+        public async Task<IActionResult> UpdateUserRole([FromBody] RoleUpdate roleUpdate)
+        {
+            var id = Guid.Parse(roleUpdate.userId);
+
+            var userInfo = await _context.UserInfo.FindAsync(id);
+            userInfo.roleId = Convert.ToInt32(roleUpdate.roleId);
+            userInfo.isActive = true;
+
+            _context.Entry(userInfo).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserInfoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("GetUserInfo", GetUserInfo());
+        }
+
         private bool UserInfoExists(Guid id)
         {
             return _context.UserInfo.Any(e => e.userId == id);
         }
+    }
+
+    public class RoleUpdate
+    {
+        public string roleId { get; set; }
+        public string userId { get; set; }
     }
 }
