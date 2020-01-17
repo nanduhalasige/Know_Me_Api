@@ -202,8 +202,20 @@ namespace Know_Me_Api.Controllers
                                     ? item.quantity
                                     : tempProd.quantity - (tempQt - item.quantity);
                                 item.quantity = item.quantity < 0 ? 0 : item.quantity;
-                                _context.Entry(item).State = EntityState.Modified;
-                                await _context.SaveChangesAsync();
+                                try
+                                {
+                                    tempProd.IsActive = item.IsActive;
+                                    tempProd.quantity = item.quantity;
+                                    tempProd.modifiedBy = item.modifiedBy;
+                                    tempProd.modifiedOn = item.modifiedOn;
+                                    tempProd.userId = item.userId;
+                                    _context.Entry(tempProd).State = EntityState.Modified;
+                                    await _context.SaveChangesAsync();
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw ex;
+                                }
                             }
                         }
                     }
