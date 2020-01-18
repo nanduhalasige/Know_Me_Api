@@ -53,18 +53,11 @@ namespace Know_Me_Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProducts([FromRoute] Guid id, [FromBody] Products products)
         {
-            //var idConverted = Guid.Parse(Request.QueryString.Value.Split('=')[1]);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             products.productId = id;
-
-            //var prods = await _context.Products.FindAsync(id);
-            //prods.quantity = products.quantity;
-            //prods.manufacturerName = products.manufacturerName;
-            //prods.modelName = products.modelName;
-            //prods.price = products.price;
             products.modifiedOn = Convert.ToDateTime(products.modifiedOn);
             _context.Entry(products).State = EntityState.Modified;
 
@@ -86,30 +79,59 @@ namespace Know_Me_Api.Controllers
             return CreatedAtAction("GetProducts", GetProducts());
         }
 
+
+        [Route("GetWareHouseProducts")]
+        [HttpGet]
+        public WareHouseData GetWareHouseProducts()
+        {
+            WareHouseData wareHouseData = new WareHouseData()
+            {
+                wareHouse = _context.WareHouse.ToList(),
+                wareHouseProducts = _context.WareHouseProducts.ToList()
+            };
+            return wareHouseData;
+        }
+
+
         [Route("UpdateStock/{id}")]
         [HttpPut]
-        public async Task<IActionResult> UpdateStock([FromRoute] Guid id, [FromBody] StockUpdate stock)
+        public async Task<IActionResult> UpdateStock([FromRoute] Guid id, [FromBody] WareHouseStockUpdate wareHouseStock)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var products = await _context.Products.FindAsync(id);
+            var warehouseProds = new WareHouseProducts();
 
-            if (stock.change == "+")
+            if (wareHouseStock.wareHouseId != 0 && wareHouseStock.wareHouseId != null)
             {
-                products.quantity += stock.quantity;
+                warehouseProds = _context.WareHouseProducts.Where(x => x.productId.Equals(id.ToString()) && x.wareHouseId.Equals(wareHouseStock.wareHouseId)).FirstOrDefault();
+                if (wareHouseStock.change == "+")
+                {
+                    warehouseProds.quantity += wareHouseStock.quantity;
+                }
+                else
+                {
+                    warehouseProds.quantity -= wareHouseStock.quantity;
+                }
+                _context.Entry(warehouseProds).State = EntityState.Modified;
+                var wareHouseAllStock = _context.WareHouseProducts.Where(x => x.productId.Equals(id.ToString())).ToList();
+                products.quantity = wareHouseAllStock.Sum(s => s.quantity);
+                _context.Entry(products).State = EntityState.Modified;
             }
             else
             {
-                products.quantity -= stock.quantity;
+                if (wareHouseStock.change == "+")
+                {
+                    products.quantity += wareHouseStock.quantity;
+                }
+                else
+                {
+                    products.quantity -= wareHouseStock.quantity;
+                }
+                products.modifiedOn = DateTime.Now;
+                products.modifiedBy = wareHouseStock.modifiedBy;
+                products.userId = wareHouseStock.userId;
+
+                _context.Entry(products).State = EntityState.Modified;
             }
-            products.modifiedOn = DateTime.Now;
-            products.modifiedBy = stock.modifiedBy;
-            products.userId = stock.userId;
-
-            _context.Entry(products).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -127,6 +149,7 @@ namespace Know_Me_Api.Controllers
             }
             return CreatedAtAction("GetProducts", GetProducts());
         }
+
 
         // POST: api/Products
         [HttpPost]
@@ -140,6 +163,18 @@ namespace Know_Me_Api.Controllers
             products.modifiedOn = Convert.ToDateTime(products.modifiedOn);
             products.IsActive = true;
             _context.Products.Add(products);
+            //CreateFieldsOnWareHouseProducts(products.productId);
+            var warehouses = _context.WareHouse.ToList();
+            foreach (var item in warehouses)
+            {
+                var tempWhProds = new WareHouseProducts()
+                {
+                    productId = products.productId.ToString(),
+                    quantity = 0,
+                    wareHouseId = item.WareHouseId
+                };
+                _context.WareHouseProducts.Add(tempWhProds);
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProducts", GetProducts());
@@ -252,4 +287,22 @@ namespace Know_Me_Api.Controllers
         public string userId { get; set; }
         public string device { get; set; }
     }
+
+    public class WareHouseStockUpdate : StockUpdate
+    {
+        public int? wareHouseId { get; set; }
+    }
+
+    public class WareHouseProductSelect
+    {
+        public int wareHouseId { get; set; }
+        public string productId { get; set; }
+    }
+
+    public class WareHouseData
+    {
+        public List<WareHouse> wareHouse { get; set; }
+        public List<WareHouseProducts> wareHouseProducts { get; set; }
+    }
+
 }

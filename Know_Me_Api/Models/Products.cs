@@ -20,5 +20,6 @@ namespace Know_Me_Api.Models
         public string modifiedBy { get; set; }
         public DateTime? modifiedOn { get; set; }
         public bool? IsActive { get; set; }
+        public string WareHouseStock { get; set; }
     }
 }

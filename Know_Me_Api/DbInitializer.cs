@@ -51,6 +51,25 @@ namespace Know_Me_Api
             {
                 context.Role.Add(u);
             }
+
+            var wareHouse = new WareHouse[]
+            {
+                new WareHouse{
+                   WhName = "WH 1"
+                },
+                 new WareHouse{
+                   WhName = "WH 2"
+                },
+                 new WareHouse{
+                   WhName = "WH 3"
+                },
+            };
+
+            foreach (WareHouse w in wareHouse)
+            {
+                context.WareHouse.Add(w);
+            }
+
             context.SaveChanges();
         }
 
