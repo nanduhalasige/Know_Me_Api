@@ -103,6 +103,11 @@ namespace Know_Me_Api.Controllers
             if (wareHouseStock.wareHouseId != 0 && wareHouseStock.wareHouseId != null)
             {
                 warehouseProds = _context.WareHouseProducts.Where(x => x.productId.Equals(id.ToString()) && x.wareHouseId.Equals(wareHouseStock.wareHouseId)).FirstOrDefault();
+
+                if (warehouseProds == null)
+                {
+                    CreateFieldForWareHouseProduct(id);
+                }
                 if (wareHouseStock.change == "+")
                 {
                     warehouseProds.quantity += wareHouseStock.quantity;
@@ -163,21 +168,28 @@ namespace Know_Me_Api.Controllers
             products.modifiedOn = Convert.ToDateTime(products.modifiedOn);
             products.IsActive = true;
             _context.Products.Add(products);
-            //CreateFieldsOnWareHouseProducts(products.productId);
+
+            CreateFieldForWareHouseProduct(products.productId);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProducts", GetProducts());
+        }
+
+        private async void CreateFieldForWareHouseProduct(Guid productId)
+        {
             var warehouses = _context.WareHouse.ToList();
             foreach (var item in warehouses)
             {
                 var tempWhProds = new WareHouseProducts()
                 {
-                    productId = products.productId.ToString(),
+                    productId = productId.ToString(),
                     quantity = 0,
                     wareHouseId = item.WareHouseId
                 };
                 _context.WareHouseProducts.Add(tempWhProds);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProducts", GetProducts());
         }
 
         // DELETE: api/Products/5
